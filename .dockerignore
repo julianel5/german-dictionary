@@ -1,0 +1,17 @@
+.git
+.venv
+venv
+__pycache__
+**/__pycache__
+**/*.pyc
+.pytest_cache
+.ruff_cache
+node_modules
+**/node_modules
+apps/web/.nuxt
+apps/web/.output
+data/*.db
+data/*.sqlite3
+tests/_tmp
+.env
+*.log

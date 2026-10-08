@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "corpus": "fixture-de-2026",
+  "source": "Hand-authored project fixture (see data/raw/README.md for licensing)",
+  "entries": [
+    { "lemma": "gehen", "rank": 123, "count": 1500000 },
+    { "lemma": "gehen", "surface": "ging", "rank": 890, "count": 180000 },
+    { "lemma": "Haus", "rank": 456, "count": 900000 },
+    { "lemma": "Kind", "rank": 789, "count": 600000 },
+    { "lemma": "schnell", "rank": 1024, "count": 450000 },
+    { "lemma": "langsam", "rank": 2500, "count": 120000 },
+    { "lemma": "wandern", "rank": 4200, "count": 60000 }
+  ]
+}

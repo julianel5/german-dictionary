@@ -1,0 +1,9 @@
+{
+  "name": "@germandict/shared-types",
+  "version": "0.1.0",
+  "description": "Shared TypeScript DTOs for the German dictionary (API <-> web)",
+  "license": "MIT",
+  "type": "module",
+  "types": "index.d.ts",
+  "files": ["index.d.ts"]
+}

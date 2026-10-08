@@ -1,0 +1,285 @@
+{
+  "version": 1,
+  "language": "de",
+  "source": "Hand-authored project fixture (see data/raw/README.md for licensing)",
+  "lexemes": [
+    {
+      "lemma": "gehen",
+      "part_of_speech": "verb",
+      "senses": [
+        {
+          "sense_index": 1,
+          "definition": "to go; to walk — sich zu Fuß von einem Ort zum anderen bewegen"
+        },
+        {
+          "sense_index": 2,
+          "definition": "to work; to function — funktionieren (von Geräten und Maschinen)",
+          "register": "colloquial"
+        }
+      ],
+      "forms": [
+        { "surface": "gehen", "form_type": "lemma", "features": { "verb_form": "Inf" } },
+        {
+          "surface": "gehe",
+          "form_type": "inflected",
+          "features": {
+            "person": "1",
+            "number": "Sing",
+            "tense": "Pres",
+            "mood": "Ind",
+            "verb_form": "Fin"
+          }
+        },
+        {
+          "surface": "gehst",
+          "form_type": "inflected",
+          "features": {
+            "person": "2",
+            "number": "Sing",
+            "tense": "Pres",
+            "mood": "Ind",
+            "verb_form": "Fin"
+          }
+        },
+        {
+          "surface": "geht",
+          "form_type": "inflected",
+          "features": {
+            "person": "3",
+            "number": "Sing",
+            "tense": "Pres",
+            "mood": "Ind",
+            "verb_form": "Fin"
+          }
+        },
+        {
+          "surface": "ging",
+          "form_type": "inflected",
+          "features": {
+            "person": "3",
+            "number": "Sing",
+            "tense": "Past",
+            "mood": "Ind",
+            "verb_form": "Fin"
+          }
+        },
+        {
+          "surface": "gingen",
+          "form_type": "inflected",
+          "features": {
+            "person": "3",
+            "number": "Plur",
+            "tense": "Past",
+            "mood": "Ind",
+            "verb_form": "Fin"
+          }
+        },
+        {
+          "surface": "gegangen",
+          "form_type": "participle",
+          "features": { "verb_form": "Part", "tense": "Past" }
+        }
+      ],
+      "relations": [{ "relation_type": "synonym", "target_lemma": "wandern" }],
+      "examples": [
+        {
+          "text": "Wir gehen jeden Sonntag spazieren.",
+          "translation": "We go for a walk every Sunday.",
+          "source": "fixture",
+          "linked_forms": [{ "lemma": "gehen", "surface": "gehen" }]
+        },
+        {
+          "text": "Er ging schnell durch die Tür.",
+          "translation": "He went quickly through the door.",
+          "source": "fixture",
+          "linked_forms": [{ "lemma": "gehen", "surface": "ging" }]
+        },
+        {
+          "text": "Meine Uhr geht leider nicht mehr.",
+          "translation": "Unfortunately my watch no longer works.",
+          "source": "fixture",
+          "linked_forms": [{ "lemma": "gehen", "surface": "geht" }]
+        }
+      ]
+    },
+    {
+      "lemma": "wandern",
+      "part_of_speech": "verb",
+      "senses": [
+        {
+          "sense_index": 1,
+          "definition": "to hike; to go hiking — durch die Natur gehen, meist über mehrere Stunden"
+        }
+      ],
+      "forms": [
+        { "surface": "wandern", "form_type": "lemma", "features": { "verb_form": "Inf" } },
+        {
+          "surface": "wandert",
+          "form_type": "inflected",
+          "features": {
+            "person": "3",
+            "number": "Sing",
+            "tense": "Pres",
+            "mood": "Ind",
+            "verb_form": "Fin"
+          }
+        },
+        {
+          "surface": "wanderte",
+          "form_type": "inflected",
+          "features": {
+            "person": "3",
+            "number": "Sing",
+            "tense": "Past",
+            "mood": "Ind",
+            "verb_form": "Fin"
+          }
+        },
+        {
+          "surface": "gewandert",
+          "form_type": "participle",
+          "features": { "verb_form": "Part", "tense": "Past" }
+        }
+      ]
+    },
+    {
+      "lemma": "Haus",
+      "part_of_speech": "noun",
+      "gender": "neut",
+      "senses": [
+        {
+          "sense_index": 1,
+          "definition": "house — Gebäude, in dem Menschen wohnen oder arbeiten"
+        }
+      ],
+      "forms": [
+        {
+          "surface": "Haus",
+          "form_type": "lemma",
+          "features": { "case": "Nom", "number": "Sing", "gender": "Neut" }
+        },
+        {
+          "surface": "Hause",
+          "form_type": "declined",
+          "features": { "case": "Dat", "number": "Sing", "gender": "Neut" }
+        },
+        {
+          "surface": "Häuser",
+          "form_type": "declined",
+          "features": { "case": "Nom", "number": "Plur", "gender": "Neut" }
+        },
+        {
+          "surface": "Häusern",
+          "form_type": "declined",
+          "features": { "case": "Dat", "number": "Plur", "gender": "Neut" }
+        }
+      ],
+      "examples": [
+        {
+          "text": "Das Haus steht am Hügel.",
+          "translation": "The house stands on the hill.",
+          "source": "fixture",
+          "linked_forms": [{ "lemma": "Haus", "surface": "Haus" }]
+        },
+        {
+          "text": "Sie wohnen in den Häusern am Hang.",
+          "translation": "They live in the houses on the slope.",
+          "source": "fixture",
+          "linked_forms": [{ "lemma": "Haus", "surface": "Häusern" }]
+        }
+      ]
+    },
+    {
+      "lemma": "Kind",
+      "part_of_speech": "noun",
+      "gender": "neut",
+      "senses": [
+        {
+          "sense_index": 1,
+          "definition": "child — junger Mensch, der noch nicht erwachsen ist"
+        }
+      ],
+      "forms": [
+        {
+          "surface": "Kind",
+          "form_type": "lemma",
+          "features": { "case": "Nom", "number": "Sing", "gender": "Neut" }
+        },
+        {
+          "surface": "Kinder",
+          "form_type": "declined",
+          "features": { "case": "Nom", "number": "Plur", "gender": "Neut" }
+        },
+        {
+          "surface": "Kindern",
+          "form_type": "declined",
+          "features": { "case": "Dat", "number": "Plur", "gender": "Neut" }
+        }
+      ],
+      "examples": [
+        {
+          "text": "Das Kind spielt im Garten.",
+          "translation": "The child is playing in the garden.",
+          "source": "fixture",
+          "linked_forms": [{ "lemma": "Kind", "surface": "Kind" }]
+        },
+        {
+          "text": "Wir schenken den Kindern Bücher.",
+          "translation": "We are giving the children books.",
+          "source": "fixture",
+          "linked_forms": [{ "lemma": "Kind", "surface": "Kindern" }]
+        }
+      ]
+    },
+    {
+      "lemma": "schnell",
+      "part_of_speech": "adjective",
+      "senses": [
+        {
+          "sense_index": 1,
+          "definition": "fast; quick — in kurzer Zeit geschehend, hohe Geschwindigkeit habend"
+        }
+      ],
+      "forms": [
+        { "surface": "schnell", "form_type": "lemma", "features": { "degree": "Pos" } },
+        {
+          "surface": "schneller",
+          "form_type": "comparative",
+          "features": { "degree": "Cmp" }
+        },
+        {
+          "surface": "schnellsten",
+          "form_type": "superlative",
+          "features": { "degree": "Sup" }
+        }
+      ],
+      "relations": [{ "relation_type": "antonym", "target_lemma": "langsam" }],
+      "examples": [
+        {
+          "text": "Das Auto ist sehr schnell.",
+          "translation": "The car is very fast.",
+          "source": "fixture",
+          "linked_forms": [{ "lemma": "schnell", "surface": "schnell" }]
+        }
+      ]
+    },
+    {
+      "lemma": "langsam",
+      "part_of_speech": "adjective",
+      "senses": [
+        {
+          "sense_index": 1,
+          "definition": "slow — nicht schnell, geringe Geschwindigkeit habend"
+        }
+      ],
+      "forms": [
+        { "surface": "langsam", "form_type": "lemma", "features": { "degree": "Pos" } },
+        {
+          "surface": "langsamer",
+          "form_type": "comparative",
+          "features": { "degree": "Cmp" }
+        }
+      ]
+    }
+  ]
+}

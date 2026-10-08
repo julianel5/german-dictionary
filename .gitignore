@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Environment
+.env
+
+# Local databases / generated data
+data/*.db
+data/*.sqlite3
+data/processed/*
+!data/processed/.gitkeep
+
+# Test artifacts
+tests/_tmp/
+
+# Node / Nuxt
+node_modules/
+.nuxt/
+.output/
+.nitro/
+.cache/
+dist/
+*.log
+apps/web/.env
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
