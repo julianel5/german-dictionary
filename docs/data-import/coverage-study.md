@@ -1,83 +1,211 @@
-# English → German coverage & quality study: method
+# English → German coverage & quality study: executable plan
 
 A reproducible, small-scale evaluation of how well the candidate sources cover
-the English → German product goal. This document defines the **method only**.
+the English → German product goal. This document is an **evaluation plan**:
+it fixes the inputs, checksums, commands, sample rule, metrics and report
+format so the experiment can be re-run and its results trusted.
 
-> **Status: measurements pending.** No dataset was downloaded and no coverage
-> number below has been measured. Per the milestone constraints, full
-> datasets are not downloaded without approval, and **no result is
-> fabricated**. Where a value is unknown it is written `pending`.
+> **Status: planned, not run.** No dataset has been downloaded and no coverage
+> number has been measured. Per the milestone constraints, datasets are not
+> downloaded without approval, and **no result is fabricated**. Every value is
+> written `pending` until the experiment runs.
 
-Sources and their facts: [`source-register.md`](source-register.md).
-Product goal and schema decisions: [`plan.md`](plan.md).
+Companion documents: source facts in [`source-register.md`](source-register.md);
+readiness decision in [`pilot-readiness.md`](pilot-readiness.md); product goal
+and schema decisions in [`plan.md`](plan.md).
 
-## 1. What is measured
+## 0. Scope
 
-For a fixed sample of English headwords, and for the German equivalents found
-for them:
+- **Question.** For a fixed, non-cherry-picked sample of English headwords, how
+  completely and how faithfully can en.wiktionary (via Wiktextract), with de.wiktionary
+  as complement, populate: English headword + POS, English definition, **German
+  translation equivalents** (primary), sense→translation association, German
+  inflection/gender/labels, examples, and provenance?
+- **Out of scope.** Full import; schema/migration; API/UI behaviour; frequency
+  (no source; see plan §9).
+- **Guardrails.** Small sample (100–500 headwords); read-only analysis; raw
+  artefacts never committed; missing data recorded as missing.
 
-- **Headword coverage** — share of sampled English entries the source
-  represents at all, and with the expected POS.
-- **Translation coverage** — share of sampled English entries that have
-  **≥ 1 German equivalent**; and the number of **distinct German
-  equivalents** per entry.
-- **Sense→translation association coverage** — share of English senses whose
-  German equivalents are attached to the *correct* sense (vs only
-  headword-level).
-- **German inflection coverage** — share of German equivalents for which the
-  German source provides declension/conjugation/plural forms.
-- **German grammatical labels** — share of German equivalents with a
-  source-provided gender/grammatical/usage label (never inferred).
-- **Example coverage** — share of entries with ≥ 1 example, and with an
-  example translation.
-- **Definition coverage** — share of entries with an English definition
-  (supplementary) and, separately, a German-language definition.
-- **Field-fidelity** — share of source fields that map to our model
-  **without lossy conversion**; anything unmappable is counted and listed.
-- **Defects** — counts of missing records, ambiguous/duplicated
-  translations, and conflicting records across sources.
+## 1. Inputs (exact artefacts)
 
-## 2. Sample selection (documented, not cherry-picked)
+| # | artefact | expected size | source date | download |
+|---|---|---|---|---|
+| I1 | `raw-wiktextract-data.jsonl.gz` (English edition) | 2.8 GB (uncompressed 23.9 GB) | extract 2026-10-03 from enwiktionary dump 2026-09-02 | `https://kaikki.org/dictionary/raw-wiktextract-data.jsonl.gz` |
+| I2 | `raw-wiktextract-data.jsonl.gz` (German edition) | 294.3 MB (uncompressed 2.9 GB) | extract 2026-10-02 from dewiktionary dump 2026-09-01 | `https://kaikki.org/dewiktionary/raw-wiktextract-data.jsonl.gz` |
+| I3 | `freedict-eng-deu-1.9-fd1.src.tar.xz` | 16,742,600 B | dict version 1.9-fd1, dated 2022-04-15 | `https://download.freedict.org/dictionaries/eng-deu/1.9-fd1/freedict-eng-deu-1.9-fd1.src.tar.xz` |
 
-Target sample size: **100–500 English headwords**. The set is drawn to cover
-the case classes below, using a documented, repeatable rule (e.g. an
-alphabetically-spread or frequency-slot selection from an independent English
-word list), **not** a list of words already known to work.
+Generator provenance (record verbatim): Wiktextract commit `1a05e46`,
+wikitextprocessor commit `e3d6d4e` (from the kaikki landing pages).
 
-| case class | why | example |
+Place downloaded files under `data/raw/<source>/` (never committed; see
+`data/raw/README.md`). Names must match the table above so the commands run
+unchanged.
+
+## 2. Checksums and integrity
+
+**FreeDict publishes checksums** (`.sha512`). Expected SHA-512 for I3:
+
+```
+e44d3a3697d2bfe93cadef70284355bdd9d41cae818722d26e9eda8e4268ce63c37cee4d623c4be8028467fc212d49b388fdb395c0a253d285aed1bd424f80a9
+```
+
+**kaikki does not publish per-file checksums.** Therefore we compute our own
+and record them (this is a reproducibility record, not an upstream guarantee).
+
+Commands (run from the repo root after the artefacts are in `data/raw/`):
+
+```
+# I3: verify against the published checksum
+sha512sum -c freedict-eng-deu-1.9-fd1.src.tar.xz.sha512
+
+# I1, I2: no upstream checksum -> record our own + verify gzip integrity
+gzip -t data/raw/en/raw-wiktextract-data.jsonl.gz
+gzip -t data/raw/de/raw-wiktextract-data.jsonl.gz
+sha256sum data/raw/en/raw-wiktextract-data.jsonl.gz > data/raw/SHA256SUMS.txt
+sha256sum data/raw/de/raw-wiktextract-data.jsonl.gz >> data/raw/SHA256SUMS.txt
+```
+
+**Expected output:** `sha512sum -c` prints `...: OK`; `gzip -t` prints nothing
+(success) and a non-zero exit on corruption; `SHA256SUMS.txt` gains two lines.
+If any check fails, **stop** — do not measure.
+
+We also record for each artefact: URL, byte size, the date it was fetched, and
+the source/extraction dates from §1.
+
+## 3. Sample selection (documented, reproducible, not cherry-picked)
+
+Target: **120 core + up to ~60 stratified = 100–500 English headwords**. Two
+parts, both deterministic and both stored to a file so the exact sample can be
+re-derived and audited.
+
+### 3.1 Core sample (generalises; ~120)
+
+1. Stream I1 once and collect every record with `lang_code == "en"` and
+   `pos ∈ {noun, verb, adj, adv}`.
+2. Build the list of `(word, pos, etymology_number)` tuples (Wiktextract uses
+   `etymology_number` to separate numbered etymologies; missing ⇒ treat as
+   `"0"`). Sort lexicographically.
+3. Let `N` be the list length and `k = max(1, N // 120)`. Starting at offset
+   `seed mod k` with `seed = 20261008`, take every `k`-th tuple until 120 are
+   collected.
+
+This is an alphabetically-spread deterministic sample: it is **not** derived
+from whether an entry has a German translation, so it measures coverage
+honestly (including zero-translation entries).
+
+### 3.2 Stratified sample (exercises hard cases; up to ~60)
+
+For each class below, select the **first M entries in sorted order** that
+satisfy the *source-side* predicate. The predicate is about the source
+structure, never about whether our importer succeeds.
+
+| class | source-side predicate | M |
 |---|---|---|
-| common nouns | German gender + plural | house → Haus (das, Häuser) |
-| common verbs | sense splits, multiple equivalents | go → gehen / fahren |
-| irregular English verbs | English inflected forms | sing / sang / sung |
-| adjectives | comparison forms | fast / faster / fastest |
-| multi-sense words | sense separation | bank, run |
-| several German equivalents | multiple `translations` rows | put → setzen/stellen/legen |
-| words with grammatical/usage labels | label capture | colloquial/regional tags |
-| words with **no** German translation | missing stays missing | — |
-| German equivalents enriched in de.wiktionary | complementary merge | gender + plural + examples |
-| words with/without an English definition | supplementary field | — |
+| irregular English verbs | an `en` verb whose `forms` include a `past`/`participle` tag | 10 |
+| polysemy | an `en` entry with `len(senses) >= 3` | 10 |
+| multiple German equivalents | a sense with `>= 2` translations where `code == "de"` | 10 |
+| grammatical/usage labels | a sense with non-empty `tags` | 10 |
+| examples | a sense with `>= 1` example (`senses[].examples`) | 10 |
+| zero German translations | an `en` entry whose record has **no** `code == "de"` translation | 10 |
 
-The chosen sample and the selection rule must be committed alongside the
-results so the study can be re-run.
+### 3.3 Persisted sample file
 
-## 3. Procedure (to run in a later, approved milestone)
+Write the chosen keys to `data/processed/pilot-sample.json` **before** scoring:
 
-Stages 1–2 touch the network and require explicit approval; 3–5 run locally.
+```
+{ "seed": 20261008, "core_size": 120, "stratified_per_class": 10,
+  "entries": [ {"word": "...", "pos": "...", "etymology_number": "0",
+                "class": "core|irregular_verb|polysemy|multi_de|labels|examples|no_de"} ] }
+```
 
-1. **Obtain artefacts** into `data/raw/<source>/` (never committed): en
-   Wiktextract JSONL, de Wiktextract JSONL, FreeDict eng-deu `.src.tar.xz`.
-   Record URL, size and checksum for each.
-2. **Verify** sizes/checksums and record extraction/dump dates.
-3. **Extract the sample**: for each sampled English headword, locate the
-   `lang_code == "en"` record(s) and collect `senses`, `translations`
-   (`code: de`), `forms`; then locate the corresponding `lang_code == "de"`
-   records and de.wiktionary records for the German equivalents.
-4. **Score** each metric in §1; tally defects in §2.
-5. **Write results** to this file (or a sibling `coverage-study-results.md`)
-   as a table, with the command(s) used, source versions and dates, and the
-   sample file path — so any number can be reproduced.
+Committing this file (small, factual, no external text) makes the study
+auditable. If a future run changes the sample, the file changes and the diff is
+visible.
 
-## 4. Metrics table (fill in when run)
+## 4. Scoring procedure (read-only; no import)
+
+For each sampled key:
+
+1. Locate the `en` record(s) in I1; record `word`, `pos`, `etymology_number`,
+   `senses` (`glosses`, `raw_glosses`, `tags`), top-level and per-sense
+   `translations`, `forms`, `sounds`, `etymology_text`, `source`, `wikidata`.
+2. Extract **German equivalents** = translation objects with `code == "de"`
+   (fields: `word`, `tags` (gender), `note`, `sense`, `english`, `roman`;
+   `word` may be absent when `note` is present).
+3. Locate the corresponding `de` records in I1/I2 for the German equivalents
+   (by normalized lemma + `pos`) to measure German inflection/gender/definitions.
+4. Read I3 (FreeDict TEI XML) for the English headword and record its
+   German equivalents (headword-level; no senses).
+5. Emit one JSON row per key and aggregate the metrics in §5.
+
+### 4.1 Planned driver command (next milestone; not written yet)
+
+A read-only script `scripts/import/pilot_coverage.py` will implement §3–§5.
+Its interface is fixed now so the later implementation is verifiable:
+
+```
+python -m scripts.import.pilot_coverage \
+  --en data/raw/en/raw-wiktextract-data.jsonl.gz \
+  --de data/raw/de/raw-wiktextract-data.jsonl.gz \
+  --freedict data/raw/freedict/eng-deu.tei \
+  --sample data/processed/pilot-sample.json \
+  --report data/processed/pilot-coverage.json
+```
+
+No such script exists in this milestone; the command is a contract, not a claim
+that it has been run.
+
+## 5. Metrics and expected report shape
+
+Metrics (all per source; `pending` until run):
+
+- Headword coverage; POS agreement.
+- **German translation coverage**: % sampled entries with ≥ 1 `code == "de"`
+  equivalent; distribution of the number of distinct equivalents.
+- **Sense→translation association**: % of senses whose German equivalents are
+  attached at sense level (`senses[].translations`) vs only headword level
+  (top-level `translations`); count of unmatched/free-text `sense` values.
+- **German inflection coverage**: % of German equivalents for which de data
+  provides plural/conjugation/declension forms.
+- **German label coverage**: % with a source-provided gender/usage label.
+- **Example coverage**: % with ≥ 1 example; % of examples with an English
+  translation field.
+- **Definition coverage**: % with an English `glosses` definition; % with a
+  German-language definition (from de data).
+- **Field-fidelity**: count of source fields with no lossless target; list
+  each unmapped field.
+- **Defects**: missing records, duplicated equivalents, conflicting records
+  across sources, and per-source retrieval counts.
+
+Expected report shape (`data/processed/pilot-coverage.json`):
+
+```
+{ "sample": "data/processed/pilot-sample.json",
+  "inputs": { "en": {"sha256": "...", "date": "2026-..."}, "de": {...}, "freedict": {"sha512": "..."} },
+  "aggregate": { "<metric>": {"en": <number|"pending">, "de": ..., "freedict": ...} },
+  "per_entry": [ { "word": "...", "pos": "...", "german_equivalents": [...], "flags": [...] } ],
+  "errors": [ { "class": "...", "word": "...", "detail": "..." } ] }
+```
+
+## 6. Error reporting
+
+Every anomaly is recorded, never silently dropped. Error classes:
+
+| class | meaning |
+|---|---|
+| `missing_record` | sampled key absent from the source |
+| `no_german_translation` | record exists but has no `code == "de"` translation |
+| `sense_unmapped` | translations only at headword level, or `sense` text matching no gloss |
+| `duplicate_translation` | the same German surface repeated for one sense |
+| `conflicting_translation` | sources disagree on the German equivalent for a sense |
+| `lossy_field` | a source field has no faithful target in the proposed model |
+| `invalid_record` | record fails the candidate normalizer/validation |
+| `word_field_absent` | a translation object has `note` but no `word` |
+
+The report prints a per-class count and the first N examples, and the process
+exits non-zero only on integrity failures (§2), not on data-quality findings.
+
+## 7. Results (fill in when run)
 
 | metric | en.wiktionary | de.wiktionary | FreeDict eng-deu |
 |---|---|---|---|
@@ -93,14 +221,16 @@ Stages 1–2 touch the network and require explicit approval; 3–5 run locally.
 | fields mapped without lossy conversion | pending | pending | pending |
 | missing/ambiguous/duplicated/conflicting records | pending | pending | pending |
 
-## 5. Interpretation rules
+## 8. Interpretation rules
 
+- **Planned ≠ done.** Until §7 is filled from an actual run, nothing here is a
+  measurement. This document must never be read as results.
 - **Missing is not zero.** A blank cell means the source does not model that
   content, not that coverage is 0%.
-- **Never infer.** If a source lacks a grammatical feature, it is recorded as
-  missing; it is never derived to make a number look better.
-- **Provenance stays attached** in every result, so a merged coverage number
-  can always be decomposed per source.
+- **Never infer.** If a source lacks a grammatical feature it is recorded as
+  missing; it is not derived to improve a number.
+- **Provenance stays attached**, so any merged figure can be decomposed per
+  source.
 - **Headline counts are not coverage.** FreeDict's 460,315 headwords are an
-  entry count, not a measure of usable English→German sense pairs, and are
-  not used to rank sources.
+  entry count, not usable English→German sense pairs, and are not used to rank
+  sources.
