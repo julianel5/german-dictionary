@@ -78,3 +78,6 @@ L1: manifiesto del dump concreto. L3: opinión jurídica por escenarios. L4: val
 11. [ ] **Integridad de atribución**: verificación end-to-end de que la atribución se muestra por fuente para equivalentes con orígenes distintos.
 
 **Importante:** redactar esta propuesta no resuelve L4. L4 permanece `UNVERIFIED`. La **aprobación documental (Etapa 1)** no sustituye la **validación de implementación (Etapa 2)**; ambas deben completarse antes de considerar L4 resuelto.
+
+## MVP scope reference (Wiktionary-only)
+This proposal focuses on Wiktionary/Wiktextract for MVP. FreeDict remains outside MVP. When documenting the exact dump, complete the checklist (URL, version/retrieved_at, checksum, licence/licence_url, README/LICENSE, attribution_text).
