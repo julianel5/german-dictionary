@@ -51,3 +51,24 @@ Normalización, filtrado, enriquecimiento (de.wiktionary: género/formas/glosas)
 ## 8. Pendientes y cierre
 
 L1: manifiesto del dump concreto. L3: opinión jurídica por escenarios. L4: validación de textos por superficies y export gate. L4 solo pasa a VERIFICADO cuando todos aplicables estén aprobados.
+
+## 10. Revisión y cierre detallados (criterios verificables)
+
+### Responsables de revisión
+
+- **Legal**: validación de manifiesto del dump, compatibilidad L3 (por escenarios), suficiencia de textos por superficie.
+- **Producto**: superficies UI, política de exportación, qué mostrar en ficha de traducción/panel de procedencia.
+- **Técnico**: implementación de tablas unión, trazabilidad, gates, idempotencia (sin cambios en este hito).
+
+### Checklist verificable para cierre de L4
+
+1. [ ] **Manifiesto completo**: `url`, `licence`, `licence_url`, `attribution_text` (aprobado), `source_version`, `retrieved_at`, `checksum`, `processed_at`, `notes` presentes y validados (vinculado a L1).
+2. [ ] **Textos aprobados por superficie**: README, "Sources"/About, ficha de traducción, panel de procedencia. Cada uno con texto aprobado por legal+producto.
+3. [ ] **Multi-origen**: tablas unión implementadas contractualmente; `is_primary` y visibilidad de todas las fuentes probados.
+4. [ ] **sense_id nullable**: reflejado en UI copy ("sense: not specified (headword-level)") cuando aplica.
+5. [ ] **Transformaciones registradas**: normalización/filtrado/enriquecimiento + "notice of changes" registrable en `notes`/provenance.
+6. [ ] **Export gate**: deshabilitado por defecto; activación requiere revalidación explícita de L1/L3/L4.
+7. [ ] **Diferenciación de licencias**: FreeDict nunca fusionado con Wiktionary sin ambos enlaces; gate para incorporación existe.
+8. [ ] **No se autoriza distribución**: política explícita de "sin export/dump público" vigente hasta que todos los puntos se cumplan.
+
+**Importante:** redactar esta propuesta no resuelve L4. L4 permanece `UNVERIFIED` hasta que legal+producto aprueben los ítems anteriores con evidencia concreta.

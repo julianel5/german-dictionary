@@ -38,3 +38,43 @@ Medición solo lectura permitida. Importación/redistribución requieren los tre
 ## 6. Decisión
 
 Autorizado: solo mediciones solo lectura y diseño con datos sintéticos. No autorizado: import real, incorporar FreeDict, combinar fuentes con licencias distintas, distribuir exports/dumps. Bloqueos permanecen mientras L1/L3/L4 UNVERIFIED.
+
+## 7. Requisitos por escenario (detalle)
+
+### S1: Mediciones locales solo lectura
+- **Bloqueos aplicables:** ninguno nuevo
+- **Evidencia necesaria:** artefactos externos verificados (ya existentes)
+- **Autorizado:** sí (ya realizado)
+
+### S2: Diseño con datos sintéticos
+- **Bloqueos aplicables:** ninguno
+- **Evidencia necesaria:** fixtures sintéticas sin texto real
+- **Autorizado:** sí (interfaces, esquema lógico, pruebas)
+
+### S3: Importar Wiktionary/Wiktextract a BD desarrollo (exclusivamente)
+- **Incluye FreeDict:** NO
+- **Bloqueos aplicables:** L1, L4 (mínimo)
+- **Evidencia necesaria L1:** manifiesto dump concreto completo
+- **Evidencia necesaria L4:** textos aprobados (README, Sources, ficha, panel) + export gate
+- **Condición:** L1 VERIFICADO, L4 superficies mínimas aprobadas. **No requiere** L3.
+
+### S4: Incorporar FreeDict
+- **Bloqueos aplicables:** L3 (y L4 si se expone)
+- **Evidencia necesaria L3:** opinión jurídica por escenarios (separados vs fusionados, BD distribuida/export, servicio red/AGPLv3, jurisdicción)
+- **Condición:** L3 VERIFICADO explícitamente. Nunca asumir por separación arquitectónica.
+
+### S5: Combinar textos de fuentes distintas
+- **Bloqueos aplicables:** L3 si alguna es FreeDict; revisar según fuentes
+- **Evidencia necesaria:** validación para ese escenario concreto
+- **Condición:** solo si compatible; por defecto NO-GO si FreeDict involucrado
+
+### S6: Distribuir exportaciones/dumps
+- **Bloqueos aplicables:** L1, L3 (si incluye FreeDict), L4
+- **Evidencia necesaria:** todos verificados + NOTICE + atribución completa + export gate explícito
+- **Condición:** **NO-GO** mientras cualquiera UNVERIFIED
+
+### S7: Desplegar servicio con datos reales
+- **Subcaso 7a:** solo Wiktionary/Wiktextract → requiere L1 + L4 mínimo; **no requiere L3**
+- **Subcaso 7b:** incluye FreeDict → requiere L1 + L3 + L4
+- **Evidencia necesaria:** según subcaso
+- **Condición:** explícita por subcaso; nunca autorizar implícitamente por inclusión/exclusión cruzada

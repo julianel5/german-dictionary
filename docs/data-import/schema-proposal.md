@@ -40,3 +40,48 @@ Idempotente (match por data_source_id+external_id), homónimo-safe, sin inferir 
 ## 6. Decisiones abiertas
 
 is_primary/confidence, tags_hash, tratamiento de external_id ausente. Incorporación FreeDict bloqueada por L3.
+
+## 9. Integridad, índices, cardinalidades y referencias
+
+### Cardinalidades
+
+- lexemes (1:N) senses, word_forms, translations (cuando lexeme_id no nulo), examples
+- senses (1:N) word_forms? (no forzado), (1:N) translations (cuando sense_id no nulo), (1:N) examples
+- translations (N:1) lexeme, (N:1) sense (nullable), (N:1) data_source
+- todas las entidades (N:1) data_sources vía tablas unión
+
+### Índices candidatos (propuestos, no implementados)
+
+- lexemes: (language, normalized_lemma, part_of_speech, etymology_number)
+- lexemes: (normalized_lemma)
+- senses: (lexeme_id, source_sense_index)
+- translations: (lexeme_id, language), (sense_id, language) cuando no nulo
+- word_forms: (lexeme_id, form_norm)
+- fuentes unión: (record_id, data_source_id, external_id) + (data_source_id, external_id)
+
+### Restricciones / integridad
+
+- etymology_number nullable; nunca asumir único sin él cuando hay homónimos
+- sense_id nullable en translations (headword-level). No crear FKs forzosas que impidan este caso
+- data_source_id obligatorio en todas las filas de contenido con procedencia
+- external_id puede ser vacío? propuesto: tratar ausente como cadena vacía con índice compuesto, evitando colisiones
+- evitar unicidad global que fusione homónimos o textos multi-origen
+- colisiones homónimas: si no existe etymology_number, usar identidad + external_id + data_source_id para desambiguar; documentar caso
+
+### Identificadores externos y ausentes
+
+- external_id preserva id original del dump (Wiktextract) para idempotencia
+- si external_id falta: generar clave determinista (hash de contenido+fuente+contexto) y registrarlo; nunca inventar mapping global
+- no usar external_id para fusionar entre fuentes distintas
+
+### Idempotencia, validación, rollback
+
+- Idempotente: match por (data_source_id, external_id); actualizar campos no-provenance sin borrar filas unión existentes
+- Validación: chequear cardinalidades, no colapsar homónimos, sense_id nullable respetado, presencia de data_source para cada registro con procedencia
+- Rollback: import por lotes con transacciones por dataset/version; poder revertir lote sin afectar otros datasets
+- Informes: resumen (insertados/actualizados/omitidos), conflictos, homónimos detectados, traducciones sin sentido
+
+### Decisiones propuestas vs pendientes
+
+- **Propuestas:** unión por join tables, inclusión etymology_number, sense_id nullable, gate FreeDict OFF.
+- **Pendientes:** is_primary regla (conflicto texto), confidence semantics, tags_hash formato, política external_id vacío, juicio legal L3.
