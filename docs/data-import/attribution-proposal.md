@@ -62,13 +62,19 @@ L1: manifiesto del dump concreto. L3: opinión jurídica por escenarios. L4: val
 
 ### Checklist verificable para cierre de L4
 
+#### Etapa 1: Aprobación documental (obligatoria)
 1. [ ] **Manifiesto completo**: `url`, `licence`, `licence_url`, `attribution_text` (aprobado), `source_version`, `retrieved_at`, `checksum`, `processed_at`, `notes` presentes y validados (vinculado a L1).
-2. [ ] **Textos aprobados por superficie**: README, "Sources"/About, ficha de traducción, panel de procedencia. Cada uno con texto aprobado por legal+producto.
-3. [ ] **Multi-origen**: tablas unión implementadas contractualmente; `is_primary` y visibilidad de todas las fuentes probados.
-4. [ ] **sense_id nullable**: reflejado en UI copy ("sense: not specified (headword-level)") cuando aplica.
-5. [ ] **Transformaciones registradas**: normalización/filtrado/enriquecimiento + "notice of changes" registrable en `notes`/provenance.
-6. [ ] **Export gate**: deshabilitado por defecto; activación requiere revalidación explícita de L1/L3/L4.
-7. [ ] **Diferenciación de licencias**: FreeDict nunca fusionado con Wiktionary sin ambos enlaces; gate para incorporación existe.
-8. [ ] **No se autoriza distribución**: política explícita de "sin export/dump público" vigente hasta que todos los puntos se cumplan.
+2. [ ] **Textos aprobados por superficie**: README, "Sources"/About, ficha de traducción, panel de procedencia. Cada uno con texto aprobado por legal+producto (borrador validado).
+3. [ ] **Modelo de procedencia documentado**: tablas unión, campos, `is_primary`, multi-origen, `sense_id` nullable definidos y aprobados.
+4. [ ] **Transformaciones registrables**: política para registrar normalización/filtrado/enriquecimiento + "notice of changes" en `notes`/provenance aprobada.
+5. [ ] **Export gate**: política (deshabilitado por defecto, activación requiere revalidación L1/L3/L4) aprobada documentalmente.
+6. [ ] **Diferenciación de licencias**: principio de no fusión entre fuentes con licencias distintas y gate para FreeDict aprobados.
+7. [ ] **No se autoriza distribución**: política explícita de "sin export/dump público" vigente hasta validación completa.
 
-**Importante:** redactar esta propuesta no resuelve L4. L4 permanece `UNVERIFIED` hasta que legal+producto aprueben los ítems anteriores con evidencia concreta.
+#### Etapa 2: Validación de implementación (obligatoria)
+8. [ ] **Tablas de procedencia**: implementadas y verificadas (sin crear migraciones en este hito; validación cuando se implemente) con enlaces correctos y preservación multi-origen.
+9. [ ] **UI/visualización**: panel de procedencia, ficha de traducción y copy para `sense_id` nullable verificados en la implementación prevista (o con datos sintéticos).
+10. [ ] **Idempotencia y ausencia de external_id**: verificado que registros sin `external_id` estable no se tratan como iguales (clave determinista registrada).
+11. [ ] **Integridad de atribución**: verificación end-to-end de que la atribución se muestra por fuente para equivalentes con orígenes distintos.
+
+**Importante:** redactar esta propuesta no resuelve L4. L4 permanece `UNVERIFIED`. La **aprobación documental (Etapa 1)** no sustituye la **validación de implementación (Etapa 2)**; ambas deben completarse antes de considerar L4 resuelto.

@@ -64,14 +64,14 @@ is_primary/confidence, tags_hash, tratamiento de external_id ausente. Incorporac
 - etymology_number nullable; nunca asumir único sin él cuando hay homónimos
 - sense_id nullable en translations (headword-level). No crear FKs forzosas que impidan este caso
 - data_source_id obligatorio en todas las filas de contenido con procedencia
-- external_id puede ser vacío? propuesto: tratar ausente como cadena vacía con índice compuesto, evitando colisiones
+- external_id: si el origen no proporciona un identificador estable, **no** tratar los valores ausentes como iguales entre sí. Usar una clave determinista de importación (p.ej. hash estable basado en dataset+fuente+lemma/forma+contexto) y registrar explícitamente `external_id_missing=true` en `notes` del enlace de procedencia. Nunca usar cadena vacía como comodín para fusionar registros distintos.
 - evitar unicidad global que fusione homónimos o textos multi-origen
 - colisiones homónimas: si no existe etymology_number, usar identidad + external_id + data_source_id para desambiguar; documentar caso
 
 ### Identificadores externos y ausentes
 
 - external_id preserva id original del dump (Wiktextract) para idempotencia
-- si external_id falta: generar clave determinista (hash de contenido+fuente+contexto) y registrarlo; nunca inventar mapping global
+- si external_id falta: generar clave determinista de importación (hash estable de contenido+fuente+contexto+índice) y registrarlo en el enlace de procedencia (`notes` o campo `external_id_deterministic`), marcando `external_id_missing=true`. Mantener explícito que el id de origen no existe; nunca mapear ausencias como idénticas.
 - no usar external_id para fusionar entre fuentes distintas
 
 ### Idempotencia, validación, rollback
