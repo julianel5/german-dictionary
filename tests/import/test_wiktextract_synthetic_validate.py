@@ -20,6 +20,5 @@ def test_validate_max_20() -> None:
     try:
         wik.validate_lemma_list_for_synthetic(many)
     except ValueError:
-        pass
-    else:
-        assert False
+        return
+    raise AssertionError("should fail on >20")
