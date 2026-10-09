@@ -1,7 +1,9 @@
 # English → German pilot readiness
 
 Validation and design deliverable for the English Wiktionary pilot.
-**Status: design only.** No dataset was downloaded, no external data was
+**Status: design + read-only pilot run (2026-10-08).** The three artefacts were
+downloaded outside the versioned tree, integrity was verified, and coverage was
+measured (see [`coverage-study.md`](coverage-study.md)). No external data was
 imported, no schema was changed, no migration was created, and no API/UI
 behaviour was modified. This document resolves the technical questions that
 could invalidate the data model or pilot, and records an explicit GO / NO-GO.
@@ -66,7 +68,7 @@ dewiktionary dump 2026-09-01; 2.9 GB / 294.3 MB gz. Supplies German-language
 definitions, gender, declension/conjugation, examples. Licence CC BY-SA 4.0
 (page-verified at the wiki footer; **not** verified for the file).
 
-### 1.4 FreeDict English–German — verified (page) / unverified (licence)
+### 1.4 FreeDict English–German — verified (page); licence verified (dataset)
 
 Version **1.9-fd1**, dated 2022-04-15, status `stable`, **460,315 headwords**,
 maintainer Einhard Leichtfuß, source `https://dict.tu-chemnitz.de/`. Artefacts
@@ -75,6 +77,16 @@ under `https://download.freedict.org/dictionaries/eng-deu/1.9-fd1/`:
 26,877,184 B, `.slob` 39,437,035 B (each with a published SHA-512). The
 metadata API `https://freedict.org/freedict-database.json` has **no licence
 field** (verified). Translations only: no senses, no inflection, no frequency.
+
+**Licence — verified (dataset), 2026-10-08.** The downloaded `.src.tar.xz`
+matched the published SHA-512, and its `eng-deu/eng-deu.tei` header
+(`teiHeader → fileDesc → publicationStmt → availability`) states verbatim that
+the dictionary is dual-licensed under the **GNU GPL v3** and the **GNU AGPL v3**,
+"where each of these licenses applies to different parts of this (combined)
+work", the source form being the Ding dictionary (GPLv2+) plus the
+`ding2tei-haskell` program (AGPLv3+). The archive also ships the GNU GPL text in
+`eng-deu/COPYING`. This is a **copyleft** licence with distribution implications
+(blocker L3), but the eng-deu licence is no longer unknown.
 
 ### 1.5 FreeDict licence-verification procedure (exact)
 
@@ -92,8 +104,8 @@ majority are GPL. Verification, when approved:
    terms because the FreeDict entry is imported.
 5. Only then may the eng-deu licence be marked `verified (dataset)`.
 
-This was **not** done in this milestone (constraint: no dataset downloads), so
-the eng-deu licence remains **unverified**.
+This was **executed on 2026-10-08**; the procedure above was followed and the
+result is recorded in §1.4 (GPLv3 + AGPLv3).
 
 ### 1.6 Verified vs assumed (summary)
 
@@ -106,19 +118,25 @@ the eng-deu licence remains **unverified**.
 | en/de Wiktionary text licensed CC BY-SA 4.0 | verified (page); **not** for the JSONL files |
 | Wiktextract **software** licence is MIT | verified (LICENSE file) |
 | FreeDict eng-deu version/size/headwords/artefacts | verified (page/API) |
-| FreeDict eng-deu **data licence** | **unverified** |
+| FreeDict eng-deu **data licence** | **verified (dataset)**: GPLv3 + AGPLv3 (TEI header) |
 | FreeDict metadata API exposes no licence | verified (API payload) |
+| kaikki raw JSONL per-file data licence | **unverified** (pages give citation only) |
 
 ### 1.7 Unresolved questions
 
 1. Does the kaikki JSONL ship (or link) a licence/attribution manifest and
    inherit only CC BY-SA 4.0, or add terms?
-2. What is the exact FreeDict eng-deu licence (GPL or other) and upstream
-   Chemnitz terms?
+2. ~~What is the exact FreeDict eng-deu licence?~~ **ANSWERED (verified,
+   2026-10-08):** GPLv3 + AGPLv3 (dual), source Ding GPLv2+ (see §1.4). Upstream
+   Chemnitz terms should still be recorded alongside.
 3. Share-alike reach: can CC BY-SA Wiktionary text be combined in one derived
-   database with GPL FreeDict data under our MIT code? (Legal review.)
-4. Are en/de translation `sense` strings reliably matchable to `glosses`, or
-   must many remain headword-level? (To measure — see `coverage-study.md`.)
+   database with GPLv3/AGPLv3 FreeDict data under our MIT code? (Legal review.)
+4. ~~Are en/de translation `sense` strings reliably matchable to `glosses`?~~
+   **ANSWERED by measurement (2026-10-08):** the kaikki raw data stores
+   translations at **headword level only** (0 of 129 sampled senses carried
+   sense-level translations); the `sense` field is free text that often matches
+   no gloss. Sense association cannot be recovered from this source, so
+   `translations.sense_id` will normally be `NULL`. See `coverage-study.md` §8.
 5. Which attribution strings must be surfaced, and where?
 6. Does `mul`/Translingual content need filtering for an English→German product?
 
@@ -312,8 +330,8 @@ changed here.
 | id | blocker | status | impact |
 |---|---|---|---|
 | L1 | kaikki en/de JSONL per-file licence/manifest unfound; only CC BY-SA 4.0 at the wiki, MIT for the tool | **open** | cannot assert the *file's* licence; blocks committing derived data |
-| L2 | FreeDict eng-deu TEI-header licence unverified (procedure §1.5) | **open** | eng-deu stays optional until verified |
-| L3 | CC BY-SA 4.0 share-alike vs GPL FreeDict in one merged database | **open** | may force separation or legal review |
+| L2 | FreeDict eng-deu licence | **resolved (verified dataset): GPLv3 + AGPLv3** | copyleft; eng-deu usable only under GPL/AGPL obligations — feeds L3 |
+| L3 | CC BY-SA 4.0 share-alike combined with GPLv3/AGPLv3 FreeDict in one merged database under MIT code | **open (sharper)** | likely forces separation of sources or a licence-compatibility review |
 | L4 | Required attribution strings and their surfacing (README/in-app) | **open** | must exist before shipping any derived data |
 | L5 | en.wiktionary historical GFDL dual-licensing | **noted** | does not change CC BY-SA 4.0 reuse, but must be documented |
 
@@ -322,29 +340,30 @@ block **committing or shipping** derived data.
 
 ## 7. GO / NO-GO recommendation
 
-**GO — conditional — for the small, read-only coverage pilot.**
-The next step is a *local evaluation*, not an import: it reads the artefacts,
-measures coverage/quality, and writes a report. It requires no schema change, no
-API change, and commits no external text. Conditions:
-
-1. **Explicit approval to download** the three artefacts (I1–I3) into
-   `data/raw/` (nothing is committed; `data/raw/README.md` rules apply).
-2. Verify integrity first (§2 of the coverage plan); stop on failure.
-3. Keep the persisted sample and computed checksums auditable; keep every result
-   **pending** until actually measured.
+**Pilot: CONDITIONAL GO — executed (2026-10-08).** The read-only evaluation ran
+as specified: it streamed the artefacts, measured coverage/quality, and wrote
+`data/processed/pilot-coverage.json`. It required no schema change, no API
+change, and committed no external text. Measured results are in
+[`coverage-study.md`](coverage-study.md) §5–§7.
 
 **NO-GO — for committing derived data, changing the schema, or implementing the
-import** until licence blockers **L1–L3** are resolved and L4 is specified.
-Specifically, do **not** create the `translations`/provenance migration or wire
-new API fields until the licence position is settled.
+import** until licence blockers **L1** and **L3** are resolved and **L4** is
+specified. Specifically, do **not** create the `translations`/provenance
+migration or wire new API fields until the licence position is settled.
 
-Rationale: the design questions that could invalidate the model are now
-resolved (identity must not collapse etymologies; translations need a
-provider-neutral table; forms inherit language from the lexeme; search must be
-language-scoped and must not run German morphology on English). The remaining
-unknowns are empirical (coverage) and legal (licence), both of which the
-read-only pilot and a licence check address **without** touching the schema or
-shipping data.
+**New, measurement-driven precondition.** A uniform sample of raw en entries is
+dominated by rare/technical/form-of entries (German coverage 5.83%), so before
+any import decision the coverage question must be re-run on a **curated,
+non-rare lemma set** (or a frequency-weighted subset). Raw-entry coverage must
+not be presented as product coverage. The pilot also confirmed that the raw data
+has **no sense-level translations**, so `translations.sense_id` will normally be
+`NULL`; the sense-association acceptance criteria must be restated accordingly.
 
-**Stop here.** No import, schema migration, or search change is made in this
-milestone.
+Rationale: the design questions that could invalidate the model are now resolved
+(translations are headword-level → `sense_id` normally `NULL`; identity must not
+collapse etymologies; translations need a provider-neutral table; forms inherit
+language from the lexeme; search must be language-scoped and must not run German
+morphology on English). The remaining unknowns are legal (L1, L3) and empirical
+(coverage on a curated set); neither could the read-only pilot close alone.
+
+**Stop here.** No import, schema migration, or search change is made.

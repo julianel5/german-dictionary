@@ -24,10 +24,11 @@ public landing/metadata pages cited below.
   once the **exact dataset's own terms** (not the host project's general
   statement) have been inspected.
 
-No licence below is marked `verified (dataset)` — that status requires
-inspecting the licence text shipped inside the specific downloadable
-artefact (TEI header, dump manifest), which was **not** done in this
-milestone. Only public landing/metadata pages were read.
+Since the read-only coverage pilot (2026-10-08), the FreeDict eng-deu licence
+has been marked `verified (dataset)` from its TEI header; the kaikki JSONL
+licences remain `unverified` because the raw-data pages publish no per-file
+licence. See [`pilot-readiness.md`](pilot-readiness.md) §1.4/§6 and
+[`coverage-study.md`](coverage-study.md) for measured results.
 
 ## Registry
 
@@ -44,7 +45,7 @@ milestone. Only public landing/metadata pages were read.
 | extraction date | 2026-10-03 |
 | source dump | enwiktionary dump dated 2026-09-02 |
 | content | "data for hundreds of languages"; for **English** entries: English headwords, POS, English glosses/definitions, **translations into all languages (incl. German)**, English inflected forms, examples, relations, pronunciation; also entries for German (`lang_code == "de"`) with declension/conjugation captured |
-| retrieval | **not downloaded** (landing page inspected only) |
+| retrieval | downloaded for the read-only pilot (2026-10-08; outside the versioned tree) |
 | licence (source wiki) | CC BY-SA 4.0 |
 | licence status | **verified (page)** for en.wiktionary.org footer/terms; **unverified** for the kaikki-derived file itself |
 | attribution | required (CC BY-SA): credit en.wiktionary + link; Wiktextract/kaikki citation requested |
@@ -83,7 +84,7 @@ languages are a filtering concern (see plan §7).
 | extraction date | 2026-10-02 |
 | source dump | dewiktionary dump dated 2026-09-01 |
 | content | German-language glosses/metadata **in German**: German-language definitions, gender, declension/conjugation, inflections/alt forms, examples, relations |
-| retrieval | **not downloaded** (landing page inspected only) |
+| retrieval | downloaded for the read-only pilot (2026-10-08; outside the versioned tree) |
 | licence (source wiki) | CC BY-SA 4.0; historically also GFDL (dual-licensed contributions) |
 | licence status | **verified (page)** for de.wiktionary.org footer; **unverified** for the kaikki-derived file itself |
 | attribution | required (CC BY-SA): credit de.wiktionary + link; Wiktextract/kaikki citation requested |
@@ -115,12 +116,12 @@ English).
 | metadata API | https://freedict.org/freedict-database.json (CORS-enabled; **no licence field** in the API payload) |
 | repo | https://github.com/freedict/fd-dictionaries |
 | content | bilingual translation equivalents (English headword → German); no definitions, no inflection tables, no frequency |
-| retrieval | **not downloaded** |
+| retrieval | downloaded for the read-only pilot (2026-10-08; outside the versioned tree) |
 | licence | per-dictionary, stated in the TEI header; project docs say "the majority … is licenced under GPL" |
-| licence status | **unverified** — the eng-deu TEI header was **not** inspected; the metadata API does not expose a licence |
-| attribution | licence-dependent; must be read from the TEI header |
-| redistribution | GPL (if applicable) has implications for bundling derived data — **must be confirmed** |
-| outstanding | inspect eng-deu TEI header licence; confirm whether the 460,315 headline count reflects usable *English→German* pairs; decide whether GPL data is acceptable for the intended distribution |
+| licence status | **verified (dataset)** — the eng-deu TEI header states dual **GPLv3 + AGPLv3** (source Ding GPLv2+); inspect `pilot-readiness.md` §1.4 |
+| attribution | licence-dependent; the TEI header carries copyright holders and source links |
+| redistribution | copyleft (GPLv3/AGPLv3) has implications for bundling derived data — see blocker L3 |
+| outstanding | confirm whether the 460,315 headline count reflects usable *English→German* pairs (measured: rare-word overlap is low); decide whether copyleft data is acceptable for the intended distribution |
 
 ### Optional / secondary sources (Spanish demoted)
 
