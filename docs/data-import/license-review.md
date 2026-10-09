@@ -97,3 +97,6 @@ for measurement only; no text copied into fixtures/seeds. Provenance tracked per
 - **L4:** `UNVERIFIED` — proposal exists; requires legal validation of required strings/surfaces (especially exports). 
 
 All three blockers require **human/legal review** before authorizing any production import or data distribution. Measurement-only work is acceptable under current guardrails (no commit of corpus data).
+## MVP scope note (Wiktionary-only)
+- MVP uses Wiktionary/Wiktextract as the sole data source. FreeDict is outside MVP scope (coverage history retained for reference).
+- L3 applies only if FreeDict integration is pursued. For Wiktionary-only, L3 does not block the MVP. No change to VERIFIED status here.
