@@ -1,0 +1,3 @@
+# Schema proposal (pre-import architecture) — no migration/model changes
+
+... complete content ...

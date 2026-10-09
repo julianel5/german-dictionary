@@ -1,0 +1,3 @@
+# Next gate: license decision & approval path
+
+... complete content ...
