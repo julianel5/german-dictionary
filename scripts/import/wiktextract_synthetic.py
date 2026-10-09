@@ -76,3 +76,24 @@ def _assert_synthetic_mode(path: Path, dataset_id: str = "synthetic") -> None:
     if "synthetic" in name or "fixture" in name:
         return
     raise ImportBlockedError()
+
+
+def validate_lemma_list_for_synthetic(lemmas: list[str], max_count: int = 20) -> list[str]:
+    if len(lemmas) > max_count:
+        raise ValueError(f"Batch too large: {len(lemmas)} > {max_count}")
+    seen = set()
+    cleaned: list[str] = []
+    for w in lemmas:
+        if not isinstance(w, str):
+            raise ValueError("lemma must be str")
+        nw = w.strip()
+        if not nw:
+            continue
+        key = nw.casefold()
+        if key in seen:
+            continue
+        seen.add(key)
+        cleaned.append(nw)
+    if len(cleaned) == 0:
+        raise ValueError("Empty lemma list")
+    return cleaned
