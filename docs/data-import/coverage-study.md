@@ -209,7 +209,8 @@ equivalent**; this is a diagnostic overlap, not a merge.
    is 5.83%, but polysemous suffix entries reached 40%. Coverage figures must be
    presented as *raw-entry* coverage, with common-word coverage measured
    separately (a curated lemma list or frequency-weighted subset) in a later
-   step. This is the single most important caveat for planning.
+   step — defined in [`common-words-study.md`](common-words-study.md). This is
+   the single most important caveat for planning.
 3. **No example translations** exist in the raw extract (`examples[].translation`
    absent); example translations cannot be sourced from here.
 4. **German enrichment works**: the de edition supplies German-language

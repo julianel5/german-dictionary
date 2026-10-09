@@ -355,9 +355,12 @@ migration or wire new API fields until the licence position is settled.
 dominated by rare/technical/form-of entries (German coverage 5.83%), so before
 any import decision the coverage question must be re-run on a **curated,
 non-rare lemma set** (or a frequency-weighted subset). Raw-entry coverage must
-not be presented as product coverage. The pilot also confirmed that the raw data
-has **no sense-level translations**, so `translations.sense_id` will normally be
-`NULL`; the sense-association acceptance criteria must be restated accordingly.
+not be presented as product coverage. This measurement is defined in
+[`common-words-study.md`](common-words-study.md) (methodology ready, measurement
+awaits the frequency-frame decision in its §1.3). The pilot also confirmed that
+the raw data has **no sense-level translations**, so `translations.sense_id`
+will normally be `NULL`; the sense-association acceptance criteria must be
+restated accordingly.
 
 Rationale: the design questions that could invalidate the model are now resolved
 (translations are headword-level → `sense_id` normally `NULL`; identity must not

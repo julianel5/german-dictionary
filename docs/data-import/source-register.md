@@ -137,7 +137,7 @@ English).
 | candidate | why not (now) |
 |---|---|
 | kaikki **post-processed** dictionaries (e.g. `kaikki.org/dictionary/English/`) | marked DEPRECATED on kaikki.org in favour of the raw Wiktextract data |
-| Corpus **frequency** data | none of the above provides corpus frequency; the fixture's `fixture-de-2026` corpus is synthetic. Real frequency is an **open gap** (plan §9) |
+| Corpus **frequency** data | none of the above provides corpus frequency; the fixture's `fixture-de-2026` corpus is synthetic. Real frequency is an **open gap** (plan §9). For the **measurement frames only**, an approved frequency list is used — see `common-words-study.md` §1.3–1.4 (option A, `TV/2006/1-1000`, CC BY-SA 4.0; raw frame text external, never committed) |
 | DWDS / other reference dictionaries | terms not inspected; not free/open by default; out of scope for the pilot |
 
 ## Open licensing questions (carry into plan §3/§9)
