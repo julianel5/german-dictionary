@@ -16,9 +16,8 @@ def test_block_real_by_default(tmp_path: Path) -> None:
     try:
         wik._assert_synthetic_mode(real)
     except wik.ImportBlockedError:
-        pass
-    else:
-        assert False, "should block real file by default"
+        return
+    raise AssertionError("should block real file by default")
 
 
 def test_allow_synthetic(tmp_path: Path) -> None:

@@ -78,3 +78,31 @@ Autorizado: solo mediciones solo lectura y diseño con datos sintéticos. No aut
 - **Subcaso 7b:** incluye FreeDict → requiere L1 + L3 + L4
 - **Evidencia necesaria:** según subcaso
 - **Condición:** explícita por subcaso; nunca autorizar implícitamente por inclusión/exclusión cruzada
+
+## 8. Estrategia Wiktionary-only para MVP
+
+### Decisión de producto
+- **Única fuente del MVP:** Wiktionary/Wiktextract exclusivamente.
+- **FreeDict:** fuera del alcance del MVP. No se implementará integración en este hito. Se conservan los resultados de cobertura históricos (common-words-study.md) como referencia; no se eliminarán mediciones existentes útiles.
+- **Alcance temporal:** esta decisión aplica al MVP; cualquier reconsideración requiere nueva decisión/documentación.
+
+### Impacto en bloqueos
+- **Wiktionary-only:** L1 aplica (dump concreto). L4 aplica en sus requisitos mínimos. **L3 NO bloquea** este escenario siempre que FreeDict permanezca excluido.
+- **Si se incorpora FreeDict posteriormente:** entonces S4/S5/S6/S7b aplican y L3 se vuelve obligatorio.
+
+### Checklist para licencia de dump exacto (Wiktextract)
+- [ ] URL exacta del dump (no página genérica)
+- [ ] Versión/fecha (`source_version`) y `retrieved_at` (UTC)
+- [ ] `checksum` (sha256) del archivo .jsonl.gz exacto
+- [ ] `licence` y `licence_url` del archivo distribuido (no solo wiki)
+- [ ] README/LICENSE que acompañe al dump (términos del archivo distribuido)
+- [ ] `attribution_text` propuesto y aprobado (documental)
+- [ ] Manifiesto guardado junto al artefacto (nunca commiteado)
+
+### Importador: requisitos para ejecutar con lote pequeño (solo tras autorización)
+- [ ] Autorización documentada registrada (manifiesto + aprobación L1/L4 mínimos)
+- [ ] Modo simulación disponible (dry-run)
+- [ ] Bloqueo real-data activo por defecto
+- [ ] Idempotencia, transacciones por lote, rollback, informe
+- [ ] Soporta homónimos, `sense_id` nullable, external_id ausente con clave determinista + `external_id_missing=true`
+- [ ] Validación de entrada, detección de conflictos
